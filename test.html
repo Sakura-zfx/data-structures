@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    var arr = new Array(1000000)
+    arr.fill(0)
+    console.time('0')
+    arr.splice(500, 1)
+    console.timeEnd('0')
+    function Node(data) {
+      this.data = data
+      this.next = null
+    }
+
+    function SinglyList() {
+      this._length = 0
+      this.head = null
+    }
+
+    SinglyList.prototype.remove = function (position) {
+      var currentNode = this.head,
+        length = this._length,
+        count = 0,
+        message = { failure: 'Failure: non-existent node in this list.' },
+        beforeNodeToDelete = null,
+        nodeToDelete = null,
+        deletedNode = null;
+
+      // 1st use-case: an invalid position
+      if (position < 0 || position > length) {
+        throw new Error(message.failure);
+      }
+
+      // 2nd use-case: the first node is removed
+      if (position === 1) {
+        this.head = currentNode.next;
+        deletedNode = currentNode;
+        currentNode = null;
+        this._length--;
+
+        return deletedNode;
+      }
+
+      // 3rd use-case: any other node is removed
+      while (count < position) {
+        beforeNodeToDelete = currentNode;
+        nodeToDelete = currentNode.next;
+        count++;
+      }
+
+      beforeNodeToDelete.next = nodeToDelete.next;
+      deletedNode = nodeToDelete;
+      nodeToDelete = null;
+      this._length--;
+
+      return deletedNode;
+    };
+
+    SinglyList.prototype.add = function (value) {
+      var node = new Node(value),
+        currentNode = this.head;
+
+      // 1st use-case: an empty list 
+      if (!currentNode) {
+        this.head = node;
+        this._length++;
+
+        return node;
+      }
+
+      // 2nd use-case: a non-empty list
+      node.next = this.head
+      this.head = node
+
+      this._length++;
+
+      return node;
+    };
+    var linklist = new SinglyList()
+    for (let i = 0; i < 10; i++) {
+      linklist.add(i)
+    }
+    // console.time('1')
+    // var t = linklist.remove(500)
+    linklist.remove(0)
+    // linklist.remove(502)
+    // linklist.remove(503)
+    // linklist.remove(504)
+    // console.timeEnd('1')
+    console.log(linklist)
+  </script>
+</body>
+
+</html>
